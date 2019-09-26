@@ -1,0 +1,182 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>ABCtime英语绘本</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="full-screen" content="true" />
+    <meta name="screen-orientation" content="portrait" />
+    <meta name="x5-fullscreen" content="true" />
+    <meta name="360-fullscreen" content="true" />
+    <style>
+        html, body {
+            -ms-touch-action: none;
+            background: #888888;
+            padding: 0;
+            border: 0;
+            margin: 0;
+            height: 100%;
+        }
+        @font-face {
+			font-family: 'Sassoon';  /* project id 198770 */
+			src: url('https://classkit.oss-cn-shenzhen.aliyuncs.com/font/Sassoon.ttf');
+		}
+        @font-face {
+            font-family: 'SpeakBooseTraBold';  /* project id 198770 */
+            src: url('https://classkit.abctime-me.com/font/speakaboosextrabold-webfont.ttf');
+        }
+        @font-face {
+            font-family: 'FuturaRoundDemi';  /* project id 198770 */
+            src: url('https://classkit.abctime-me.com/font/a_FuturaRoundDemi.ttf');
+        }
+        @font-face {
+            font-family: 'VAGRounded';
+            src: url('./resource/font/org.ttf');
+        }
+
+        @font-face {
+            font-family: 'FZLanTYJW_Zhun';
+            src: url('./resource/font/FZLanTYJW_Zhun.ttf');
+        }
+
+        @font-face {
+            font-family: 'FZLanTYJW_ZhongCu';
+            src: url('./resource/font/FZLanTYJW_ZhongCu.ttf');
+        }
+        @font-face {
+            font-family: 'VAGRoundedCu';
+            src: url('./resource/font/lte50424.ttf');
+        }
+    </style>
+</head>
+
+<body>
+    <div style="font-family: SpeakBooseTraBold;position: absolute; opacity: 0">ziti加载2</div>
+    <div style="font-family: Sassoon; position: absolute; opacity: 0">ziti加载1</div>
+    <div style="font-family: FuturaRoundDemi; position: absolute; opacity: 0">ziti加载3</div>
+    <div style="font-family: VAGRounded;position: absolute; opacity: 0">ziti加载4</div>
+    <div style="font-family: FZLanTYJW_Zhun;position: absolute; opacity: 0">ziti加载5</div>
+    <div style="font-family: FZLanTYJW_ZhongCu;position: absolute; opacity: 0">ziti加载6</div>
+    <div style="font-family: VAGRoundedCu;position: absolute; opacity: 0">ziti加载7</div>
+    <div style="margin: auto;width: 100%;height: 100%;" class="egret-player"
+         data-entry-class="Main"
+         data-orientation="landscape"
+         data-scale-mode="showAll"
+         data-frame-rate="30"
+         data-content-width="1334"
+         data-content-height="750"
+         data-show-paint-rect="false"
+         data-multi-fingered="2"
+         data-show-fps="false" 
+         data-show-log="false"
+         data-show-fps-style="x:0,y:0,size:12,textColor:0xffffff,bgAlpha:0.9">
+    </div>
+    <script>
+        // function initSentry() {
+        //     Sentry.init({ dsn: 'https://2107de9980a641b8898205873c8ef436@sentry.io/1302815' });
+        // }
+    </script>
+<!--    <script src="dsbridge/bundle.min.js" async onload="initSentry()" crossorigin="anonymous"></script>-->
+    <script egret="lib" src="dsbridge/dsbridge.js" src-release="dsbridge/dsbridge.js"></script>
+    <script egret="lib" src="dsbridge/vconsole.min.js" src-release="dsbridge/vconsole.min.js"></script>
+<script>
+
+    function showConsole(debug) {
+        if(debug)
+            var vConsole = new VConsole();
+    }
+    window["showConsole"] = showConsole;
+    function searchToObject(str) {
+		if(str == undefined) return
+		str = str.substr(1)
+		var arr = str.split("&"),
+			obj = {},
+			newArr = []
+		arr.map(function(value,index,arr){
+			newArr = value.split("=")
+			if(newArr[0] != undefined) {
+			obj[newArr[0]] = newArr[1]
+		}
+		})
+		return obj
+	}
+
+    var loadScript = function (list, callback) {
+        var loaded = 0;
+        var loadNext = function () {
+            loadSingleScript(list[loaded], function () {
+                loaded++;
+                if (loaded >= list.length) {
+                    callback();
+                }
+                else {
+                    loadNext();
+                }
+            })
+        };
+        loadNext();
+    };
+
+    var loadSingleScript = function (src, callback) {
+        var s = document.createElement('script');
+        s.async = false;
+        s.src = src;
+        s.addEventListener('load', function () {
+            s.parentNode.removeChild(s);
+            s.removeEventListener('load', arguments.callee, false);
+            callback();
+        }, false);
+        document.body.appendChild(s);
+    };
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', './manifest.json?v=' + Math.random(), true);
+    xhr.addEventListener("load", function () {
+        var manifest = JSON.parse(xhr.response);
+        var list = manifest.initial.concat(manifest.game);
+        if(searchToObject(location.search).srpg) {
+            list.push('https://res.wx.qq.com/open/js/jweixin-1.0.0.js');
+        }
+        loadScript(list, function () {
+            /**
+             * {
+             * "renderMode":, //Engine rendering mode, "canvas" or "webgl"
+             * "audioType": 0 //Use the audio type, 0: default, 2: web audio, 3: audio
+             * "antialias": //Whether the anti-aliasing is enabled in WebGL mode, true: on, false: off, defaults to false
+             * "calculateCanvasScaleFactor": //a function return canvas scale factor
+             * }
+             **/
+            egret.runEgret({ renderMode: "webgl", audioType: 2, calculateCanvasScaleFactor:function(context) {
+                var backingStore = context.backingStorePixelRatio ||
+                    context.webkitBackingStorePixelRatio ||
+                    context.mozBackingStorePixelRatio ||
+                    context.msBackingStorePixelRatio ||
+                    context.oBackingStorePixelRatio ||
+                    context.backingStorePixelRatio || 1;
+                return (window.devicePixelRatio || 1) / backingStore;
+            }});
+        });
+    });
+    xhr.send(null);
+</script>
+<script>
+    function playsound(sound, loop) {
+        if (sound == null) {
+            console.log('sound err')
+            return;
+        }
+        var times = loop ? 0 : 1;
+        if (typeof WeixinJSBridge != 'undefined') {
+            WeixinJSBridge.invoke('getNetworkType', {}, function (e) {
+                return sound.play(0, times).volume = 0;
+            });
+        } else {
+            return sound.play(0, times).volume = 0;
+        }
+    }
+</script>
+</body>
+
+</html>
